@@ -1,31 +1,26 @@
-import chromium from "chrome-aws-lambda";
+import chrome from "chrome-aws-lambda";
 import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
 import { SPOTIFY_IMAGE_HEIGHT, SPOTIFY_IMAGE_WIDTH } from "../../consts";
 
 const shot = async (embedUrl: string) => {
-  // await chromium.font("https://ghcdn.rawgit.org/googlefonts/noto-cjk/main/Sans/SubsetOTF/JP/NotoSansJP-Regular.otf");
-  const { puppeteer } = chromium;
-  const agent = await puppeteer.launch({
-    args: chromium.args,
+  const browser = await chrome.puppeteer.launch({
+    args: chrome.args,
+    executablePath: await chrome.executablePath,
+    headless: true,
     defaultViewport: {
       deviceScaleFactor: 2,
       width: SPOTIFY_IMAGE_WIDTH,
       height: SPOTIFY_IMAGE_HEIGHT,
     },
-    executablePath: await chromium.executablePath,
-    env: {
-      ...process.env,
-      LANG: "ja_JP.UTF-8",
-    },
   });
-  const page = await agent.newPage();
+  const page = await browser.newPage();
   try {
     await page.goto(embedUrl);
     return await page.screenshot({ type: "png" });
   } finally {
-    await page.close();
+    await browser.close();
   }
 };
 
