@@ -5,6 +5,8 @@ import path from "path";
 import { SPOTIFY_IMAGE_HEIGHT, SPOTIFY_IMAGE_WIDTH } from "../../consts";
 
 const shot = async (embedUrl: string) => {
+  await chrome.font('https://mplus-webfonts.osdn.jp/mplus-1p-regular.ttf');
+
   const browser = await chrome.puppeteer.launch({
     args: chrome.args,
     executablePath: await chrome.executablePath,
