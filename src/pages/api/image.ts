@@ -20,6 +20,9 @@ const shot = async (embedUrl: string) => {
   const page = await browser.newPage();
   try {
     await page.goto(embedUrl);
+    await page.addStyleTag({content: '[title="Play"] {display: none}'})
+    await page.addStyleTag({content: '[title="Share"] {display: none}'})
+    await page.addStyleTag({content: 'div[dir="ltr"] {display: none}'})
     return await page.screenshot({ type: "png" });
   } finally {
     await browser.close();
